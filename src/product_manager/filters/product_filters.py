@@ -16,7 +16,7 @@ class ProductFilter(FilterSet):
     category = CharFilter(
         method="filter_category",
         label="Category",
-        help_text="Category name. Includes products in descendant categories.",
+        help_text="Category name (case-insensitive). Includes products in descendant categories.",
     )
 
     min_price = NumberFilter(
@@ -36,6 +36,7 @@ class ProductFilter(FilterSet):
     @staticmethod
     def filter_search(
         queryset: QuerySet[Product],
+        name: str,
         value: str,
     ) -> QuerySet[Product]:
         return queryset.filter(Q(title__icontains=value) | Q(sku__icontains=value))
@@ -43,10 +44,11 @@ class ProductFilter(FilterSet):
     @staticmethod
     def filter_category(
         queryset: QuerySet[Product],
+        name: str,
         value: str,
     ) -> QuerySet[Product]:
         try:
-            category = Category.objects.get(name=value)
+            category = Category.objects.get(name__iexact=value)
         except Category.DoesNotExist:
             return queryset.none()
 

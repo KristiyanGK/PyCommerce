@@ -49,6 +49,14 @@ class ProductSearchFilterTests(TestCase):
         queryset = queryset if queryset is not None else Product.objects.all()
         return ProductFilter.filter_search(queryset, "search", value)
 
+    def _filter_category(
+        self,
+        value: str,
+        queryset: QuerySet[Product] | None = None,
+    ) -> QuerySet[Product]:
+        queryset = queryset if queryset is not None else Product.objects.all()
+        return ProductFilter.filter_category(queryset, "category", value)
+
     def _filterset_qs(self, **data: str) -> QuerySet[Product]:
         return ProductFilter(
             data=data,
@@ -112,3 +120,28 @@ class ProductSearchFilterTests(TestCase):
         queryset = self._filterset_qs(search="")
 
         self.assertEqual(queryset.count(), 3)
+
+    def test_category_matches_exact_name(self):
+        queryset = self._filter_category("Electronics")
+
+        self.assertEqual(list(queryset.order_by("id")), [self.laptop, self.mouse])
+
+    def test_category_matches_name_case_insensitive(self):
+        queryset = self._filter_category("electronics")
+
+        self.assertEqual(list(queryset.order_by("id")), [self.laptop, self.mouse])
+
+    def test_category_matches_uppercase_name(self):
+        queryset = self._filter_category("ELECTRONICS")
+
+        self.assertEqual(list(queryset.order_by("id")), [self.laptop, self.mouse])
+
+    def test_category_returns_empty_queryset_when_nothing_matches(self):
+        queryset = self._filter_category("no-such-category")
+
+        self.assertFalse(queryset.exists())
+
+    def test_filterset_category_case_insensitive(self):
+        queryset = self._filterset_qs(category="office")
+
+        self.assertEqual(list(queryset), [self.keyboard])
