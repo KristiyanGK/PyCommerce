@@ -16,7 +16,6 @@ from product_manager.serializers.category_serializer import CategorySerializer
 )
 @extend_schema(tags=["categories"])
 class CategoryViewSet(viewsets.ModelViewSet):
-
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]

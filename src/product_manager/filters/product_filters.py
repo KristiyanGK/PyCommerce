@@ -38,10 +38,7 @@ class ProductFilter(FilterSet):
         queryset: QuerySet[Product],
         value: str,
     ) -> QuerySet[Product]:
-        return queryset.filter(
-            Q(title__icontains=value) |
-            Q(sku__icontains=value)
-        )
+        return queryset.filter(Q(title__icontains=value) | Q(sku__icontains=value))
 
     @staticmethod
     def filter_category(

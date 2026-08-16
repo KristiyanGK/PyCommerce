@@ -25,7 +25,6 @@ from product_manager.serializers.product_serializer import ProductSerializer
 )
 @extend_schema(tags=["products"])
 class ProductViewSet(viewsets.ModelViewSet):
-
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
@@ -33,7 +32,4 @@ class ProductViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProductFilter
 
-    parser_classes = [
-        MultiPartParser,
-        FormParser
-    ]
+    parser_classes = [MultiPartParser, FormParser]
