@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 
 from product_manager.filters.product_filters import ProductFilter
@@ -15,3 +16,8 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = ProductFilter
+
+    parser_classes = [
+        MultiPartParser,
+        FormParser
+    ]
