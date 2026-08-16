@@ -47,5 +47,5 @@ urlpatterns = [
     path("api/", include("product_manager.urls")),
 ]
 
-if settings.DEBUG or settings.SERVE_MEDIA:
+if not settings.USE_MINIO and (settings.DEBUG or settings.SERVE_MEDIA):
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

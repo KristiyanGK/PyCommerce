@@ -31,6 +31,13 @@ def _env_list(name: str, default: list[str] | None = None) -> list[str]:
     return [item.strip() for item in value.split(",") if item.strip()]
 
 
+def _env_str(name: str, default: str | None = None) -> str | None:
+    value = os.environ.get(name)
+    if value is None or not value.strip():
+        return default
+    return value.strip()
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
@@ -39,7 +46,9 @@ DEBUG = _env_bool("DJANGO_DEBUG", default=True)
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
     if DEBUG:
-        SECRET_KEY = "django-insecure-y*n=p3!i1*69rxqaw&8!i+(@=1igb^@j6@jm$md2xyjww&oyqi"
+        SECRET_KEY = (
+            "django-insecure-y*n=p3!i1*69rxqaw&8!i+(@=1igb^@j6@jm$md2xyjww&oyqi"
+        )
     else:
         raise ValueError("DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false")
 
@@ -65,6 +74,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "drf_spectacular",
+    "storages",
     # custom
     "product_manager.apps.ProductManagerConfig",
 ]
@@ -175,6 +185,52 @@ STORAGES = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+USE_MINIO = _env_bool("DJANGO_USE_MINIO") or bool(_env_str("MINIO_ENDPOINT"))
+if USE_MINIO:
+    minio_bucket = _env_str("MINIO_BUCKET", "pycommerce")
+    minio_endpoint = _env_str("MINIO_ENDPOINT")
+    minio_access_key = _env_str("MINIO_ACCESS_KEY")
+    minio_secret_key = _env_str("MINIO_SECRET_KEY")
+    if not minio_endpoint or not minio_access_key or not minio_secret_key:
+        raise ValueError(
+            "MINIO_ENDPOINT, MINIO_ACCESS_KEY, and MINIO_SECRET_KEY must be set "
+            "when MinIO storage is enabled"
+        )
+    minio_custom_domain = _env_str(
+        "MINIO_CUSTOM_DOMAIN",
+        f"localhost:9000/{minio_bucket}",
+    )
+    minio_url_protocol = _env_str("MINIO_URL_PROTOCOL", "http:")
+    AWS_ACCESS_KEY_ID = minio_access_key
+    AWS_SECRET_ACCESS_KEY = minio_secret_key
+    AWS_STORAGE_BUCKET_NAME = minio_bucket
+    AWS_S3_ENDPOINT_URL = minio_endpoint
+    AWS_S3_REGION_NAME = _env_str("MINIO_REGION", "us-east-1")
+    AWS_S3_ADDRESSING_STYLE = "path"
+    AWS_S3_CUSTOM_DOMAIN = minio_custom_domain
+    AWS_S3_URL_PROTOCOL = minio_url_protocol
+    AWS_S3_USE_SSL = minio_endpoint.startswith("https")
+    AWS_QUERYSTRING_AUTH = False
+    AWS_DEFAULT_ACL = None
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "access_key": minio_access_key,
+            "secret_key": minio_secret_key,
+            "bucket_name": minio_bucket,
+            "endpoint_url": minio_endpoint,
+            "region_name": AWS_S3_REGION_NAME,
+            "addressing_style": "path",
+            "custom_domain": minio_custom_domain,
+            "url_protocol": minio_url_protocol,
+            "use_ssl": AWS_S3_USE_SSL,
+            "querystring_auth": False,
+            "default_acl": None,
+            "signature_version": "s3v4",
+        },
+    }
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
