@@ -6,4 +6,4 @@ from product_manager.models.category import Category
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
-        fields = ["name", "parent"]
+        fields = ("name", "parent")

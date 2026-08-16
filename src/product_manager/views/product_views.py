@@ -27,9 +27,9 @@ from product_manager.serializers.product_serializer import ProductSerializer
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = (DjangoFilterBackend,)
     filterset_class = ProductFilter
 
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = (MultiPartParser, FormParser)
