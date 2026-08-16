@@ -11,8 +11,8 @@ class Category(models.Model):
         related_name="children"
     )
 
-    def get_descendants(self):
-        descendants = []
+    def get_descendants(self) -> list[Category]:
+        descendants: list[Category] = []
 
         for child in self.children.all():
             descendants.append(child)
@@ -20,5 +20,5 @@ class Category(models.Model):
 
         return descendants
     
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}, {self.parent}"

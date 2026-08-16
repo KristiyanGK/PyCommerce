@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django_filters import CharFilter, NumberFilter
 from django_filters.rest_framework import FilterSet
 
@@ -30,14 +30,22 @@ class ProductFilter(FilterSet):
     )
 
     @staticmethod
-    def filter_search(queryset, name, value):
+    def filter_search(
+        queryset: QuerySet[Product],
+        name: str,
+        value: str,
+    ) -> QuerySet[Product]:
         return queryset.filter(
             Q(title__icontains=value) |
             Q(sku__icontains=value)
         )
 
     @staticmethod
-    def filter_category(queryset, name, value):
+    def filter_category(
+        queryset: QuerySet[Product],
+        name: str,
+        value: str,
+    ) -> QuerySet[Product]:
         try:
             category = Category.objects.get(name=value)
         except Category.DoesNotExist:

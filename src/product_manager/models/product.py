@@ -21,5 +21,5 @@ class Product(models.Model):
         related_name="products"
     )
     
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.title}, {self.description}, {self.price}"
