@@ -12,6 +12,9 @@ venv/
 ENV/
 .vscode
 
+# Pycharm
+.idea
+
 # Visual Studio Code # 
 .vscode/* 
 !.vscode/settings.json 
