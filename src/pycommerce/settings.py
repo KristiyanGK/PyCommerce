@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # extra libraries
     'rest_framework',
     'django_filters',
+    'drf_spectacular',
     # custom
     'product_manager.apps.ProductManagerConfig',
 ]
@@ -124,6 +125,17 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "PyCommerce API",
+    "DESCRIPTION": "Product and category operations for the e-commerce service.",
+    "VERSION": "0.1.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
 
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration

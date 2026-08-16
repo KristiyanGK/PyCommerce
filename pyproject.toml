@@ -12,6 +12,7 @@ dependencies = [
     "django-filter>=26.1",
     "djangorestframework>=3.18.0",
     "djangorestframework-stubs>=3.18.0",
+    "drf-spectacular>=0.30.0",
     "pillow>=12.3.0",
 ]
 

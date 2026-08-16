@@ -10,29 +10,32 @@ class ProductFilter(FilterSet):
     search = CharFilter(
         method="filter_search",
         label="Search",
+        help_text="Match products by title or SKU (case-insensitive, partial).",
     )
 
     category = CharFilter(
         method="filter_category",
         label="Category",
+        help_text="Category name. Includes products in descendant categories.",
     )
 
     min_price = NumberFilter(
         field_name="price",
         lookup_expr="gte",
         label="Minimum price",
+        help_text="Inclusive minimum product price.",
     )
 
     max_price = NumberFilter(
         field_name="price",
         lookup_expr="lte",
         label="Maximum price",
+        help_text="Inclusive maximum product price.",
     )
 
     @staticmethod
     def filter_search(
         queryset: QuerySet[Product],
-        name: str,
         value: str,
     ) -> QuerySet[Product]:
         return queryset.filter(
@@ -43,7 +46,6 @@ class ProductFilter(FilterSet):
     @staticmethod
     def filter_category(
         queryset: QuerySet[Product],
-        name: str,
         value: str,
     ) -> QuerySet[Product]:
         try:
