@@ -30,6 +30,7 @@ ENV/
 __pycache__
 db.sqlite3
 media
+staticfiles
 
 # Distribution / packaging
 .Python

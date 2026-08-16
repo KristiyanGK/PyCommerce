@@ -26,9 +26,11 @@ from drf_spectacular.views import (
 )
 
 from pycommerce import settings
+from pycommerce.views import healthz
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="swagger-ui", permanent=False)),
+    path("healthz/", healthz, name="healthz"),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -45,5 +47,5 @@ urlpatterns = [
     path("api/", include("product_manager.urls")),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG or settings.SERVE_MEDIA:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
