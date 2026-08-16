@@ -10,6 +10,15 @@ class Category(models.Model):
         blank=True,
         related_name="children"
     )
+
+    def get_descendants(self):
+        descendants = []
+
+        for child in self.children.all():
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+
+        return descendants
     
     def __str__(self):
         return f"{self.name}, {self.parent}"

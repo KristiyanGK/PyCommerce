@@ -1,12 +1,12 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
 
 from product_manager.views import product_views, category_views
 
+router = routers.DefaultRouter()
+router.register('products', product_views.ProductViewSet)
+router.register('categories', category_views.CategoryViewSet)
+
 urlpatterns = [
-    # product endpoints
-    path(route='products/create', view=product_views.add_product, name='add_product'),
-    path(route='products/list/', view=product_views.get_products, name='get_products'),
-    
-    # category endpoints
-    path(route='categories/create', view=category_views.add_category, name='add_category'),
+    path("", include(router.urls)),
 ]
