@@ -34,7 +34,7 @@ RUN apt-get update \
 WORKDIR /app
 
 COPY --from=builder --chown=app:app /app /app
-COPY --chown=app:app docker/entrypoint.sh /app/docker/entrypoint.sh
+COPY --chown=app:app docker /app/docker
 
 RUN chmod +x /app/docker/entrypoint.sh \
     && mkdir -p /app/src/staticfiles /app/src/media \

@@ -1,12 +1,15 @@
 # PyCommerce
 
-Django REST API for managing products and categories. Authenticated CRUD, product image uploads, nested categories, and filtering by title/SKU, price range, and category.
+Django REST API for managing products and categories. 
+Provides CRUD with basic auth, product image uploads (local or via MinIO) and filtering by title/SKU, price range, and category.
 
 ## Stack
 
-- Python 3.14+, Django 6.1, Django REST Framework
-- django-filter, drf-spectacular (OpenAPI / Swagger / ReDoc), Pillow
-- SQLite and local `media/` for development with [uv](https://docs.astral.sh/uv/); PostgreSQL, Gunicorn, and MinIO when running in Docker
+- Restful endpoints via Django and Django REST Framework
+- OpenAPI support via drf-spectacular
+- Storage: SQLite (dev), PostgreSQL and MinIO (docker)
+- Package manager: UV
+- Linter/Formatter: Ruff
 
 ## Layout
 
@@ -40,6 +43,11 @@ uv run python manage.py createsuperuser
 uv run python manage.py runserver
 ```
 
+## Code formatting
+```bash
+uv run ruff format
+```
+
 ## Run with Docker
 
 Docker Compose runs Gunicorn against PostgreSQL. Product images are stored in MinIO.
@@ -49,11 +57,13 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Product `image` URLs should look like `http://localhost:9000/pycommerce/products/...`. If you open the API as `http://127.0.0.1:8000/`, set `MINIO_CUSTOM_DOMAIN=127.0.0.1:9000/pycommerce` in `.env`. Re-upload images that were saved before MinIO was enabled.
+Product `image` URLs should look like `http://localhost:9000/pycommerce/products/...`.
 
-The API is at http://localhost:8000/. Health check: http://localhost:8000/healthz/.
-MinIO API is at http://localhost:9000/; the console is at http://localhost:9001/ (credentials from `.env`).
+API: http://localhost:8000/api
+Health check: http://localhost:8000/healthz/.
+MinIO: http://localhost:9000/, and it's console http://localhost:9001/.
 
+Setup superuser:
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
