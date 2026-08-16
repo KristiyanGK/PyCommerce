@@ -28,7 +28,7 @@ def main() -> int:
                 conn.execute("SELECT 1")
             print(f"postgres is ready ({host})", flush=True)
             return 0
-        except Exception as exc:
+        except (psycopg.Error, OSError) as exc:
             print(f"waiting for postgres ({attempt}/{attempts}): {exc}", flush=True)
             time.sleep(2)
 
